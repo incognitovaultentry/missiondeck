@@ -6,10 +6,10 @@
  */
 
 const MissionControlAPI = {
-    baseUrl: '', // Same origin - no need for full URL
+    baseUrl: typeof MISSION_CONTROL_CONFIG !== 'undefined' ? MISSION_CONTROL_CONFIG.serverUrl : '',
     ws: null,
     wsReconnectAttempts: 0,
-    maxReconnectAttempts: 5,
+    maxReconnectAttempts: typeof MISSION_CONTROL_CONFIG !== 'undefined' ? MISSION_CONTROL_CONFIG.wsReconnectAttempts : 5,
     eventHandlers: new Map(),
 
     /**
@@ -378,8 +378,14 @@ const MissionControlAPI = {
      * Connect to WebSocket for real-time updates
      */
     connectWebSocket() {
-        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-        const wsUrl = `${protocol}//${window.location.host}/ws`;
+        // Use configured WebSocket URL if available, otherwise derive from current location
+        let wsUrl;
+        if (typeof MISSION_CONTROL_CONFIG !== 'undefined' && MISSION_CONTROL_CONFIG.wsUrl) {
+            wsUrl = MISSION_CONTROL_CONFIG.wsUrl;
+        } else {
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            wsUrl = `${protocol}//${window.location.host}/ws`;
+        }
 
         try {
             this.ws = new WebSocket(wsUrl);
