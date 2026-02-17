@@ -669,6 +669,26 @@ function openTaskModal(task) {
         `).join('') :
         '<p class="text-muted">No comments yet</p>';
 
+    // Performance stats
+    const perfContainer = document.getElementById('modal-performance');
+    if (perfContainer) {
+        const perf = task.metadata && task.metadata.performance;
+        if (perf) {
+            const tokens = perf.tokens_total >= 1000
+                ? `${(perf.tokens_total / 1000).toFixed(1)}k`
+                : `${perf.tokens_total}`;
+            perfContainer.innerHTML = `
+                <div class="task-performance">
+                    <div class="performance-item">⏱ <span>${formatRuntime(perf.runtime_seconds)}</span></div>
+                    <div class="performance-item">🪙 <span>${tokens} tokens</span></div>
+                    <div class="performance-item">💰 <span>~$${perf.cost_usd.toFixed(2)}</span></div>
+                </div>`;
+            perfContainer.style.display = '';
+        } else {
+            perfContainer.style.display = 'none';
+        }
+    }
+
     // Update URL with task ID
     history.pushState({ taskId: task.id }, '', `#${task.id}`);
 
@@ -856,6 +876,13 @@ function capitalizeFirst(str) {
 function getInitials(name) {
     if (!name) return '?';
     return name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+}
+
+function formatRuntime(seconds) {
+    if (seconds < 60) return `${seconds}s`;
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return s > 0 ? `${m}m ${s}s` : `${m}m`;
 }
 
 function formatDate(isoString) {
