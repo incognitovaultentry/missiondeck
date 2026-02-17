@@ -50,6 +50,12 @@
                     <span class="metric-label">Agents</span>
                 </div>
             </div>
+            <a href="./chat.html" class="btn btn-secondary" style="display:flex;align-items:center;gap:0.4rem;text-decoration:none">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+                💬 Team
+            </a>
             <button class="btn btn-primary" onclick="openCreateTaskModal()">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -104,24 +110,7 @@
         <!-- Main View Wrapper (Board + Team Channel) -->
         <div class="main-view-wrapper">
 
-        <!-- Main View Tabs -->
-        <div class="main-view-tabs">
-            <button class="main-view-tab active" data-view="board" onclick="switchMainView('board')">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="3" width="7" height="7"></rect>
-                    <rect x="14" y="3" width="7" height="7"></rect>
-                    <rect x="14" y="14" width="7" height="7"></rect>
-                    <rect x="3" y="14" width="7" height="7"></rect>
-                </svg>
-                Tasks
-            </button>
-            <button class="main-view-tab" data-view="team" onclick="switchMainView('team')">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                </svg>
-                💬 Team
-            </button>
-        </div>
+        <!-- No view tabs — Team Channel is a dedicated page: chat.html -->
 
         <!-- Kanban Board -->
         <div class="kanban-board" id="kanban-board">
@@ -182,31 +171,7 @@
         </div>
 
         <!-- Team Channel Panel (#general) -->
-        <div class="team-channel-panel" id="team-channel-panel" style="display:none">
-            <div class="channel-header">
-                <span class="channel-hash">#</span>
-                <span class="channel-name">general</span>
-                <span class="channel-desc">Team communication channel</span>
-            </div>
-            <div class="channel-messages" id="channel-messages">
-                <p class="channel-empty">Loading messages...</p>
-            </div>
-            <div class="channel-input-area">
-                <input
-                    type="text"
-                    id="channel-input"
-                    class="channel-input"
-                    placeholder="Message #general…"
-                    onkeydown="if(event.key==='Enter')sendChannelMessage()"
-                >
-                <button class="channel-send-btn" onclick="sendChannelMessage()" title="Send">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="22" y1="2" x2="11" y2="13"></line>
-                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                    </svg>
-                </button>
-            </div>
-        </div>
+        <!-- Team Channel moved to chat.html -->
 
         </div><!-- end .main-view-wrapper -->
 
