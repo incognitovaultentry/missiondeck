@@ -709,6 +709,29 @@ function closeModal() {
 }
 
 /**
+ * Delete the currently open task
+ */
+async function deleteCurrentTask() {
+    if (!selectedTask) return;
+
+    const taskTitle = selectedTask.title || 'this task';
+    if (!confirm(`Delete "${taskTitle}"? This cannot be undone.`)) return;
+
+    const taskId = selectedTask.id;
+    try {
+        await window.MissionControlAPI.deleteTask(taskId);
+        closeModal();
+        // Remove card from board immediately
+        const card = document.querySelector(`[data-task-id="${taskId}"]`);
+        if (card) card.remove();
+        showToast('success', 'Task deleted', taskTitle);
+    } catch (err) {
+        console.error('[Delete] Failed:', err);
+        showToast('error', 'Delete failed', err.message || 'Could not delete task');
+    }
+}
+
+/**
  * Open create task modal
  */
 function openCreateTaskModal() {
