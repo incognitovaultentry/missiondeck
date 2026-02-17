@@ -630,7 +630,7 @@ function openTaskModal(task) {
 
     // Populate modal content
     document.getElementById('modal-task-title').textContent = task.title;
-    document.getElementById('modal-description').textContent = task.description;
+    document.getElementById('modal-description').innerHTML = linkify(task.description);
 
     // Priority badge
     const priorityBadge = document.getElementById('modal-priority');
@@ -664,7 +664,7 @@ function openTaskModal(task) {
                     <span class="comment-author">${escapeHtml(comment.author)}</span>
                     <span class="comment-time">${formatDate(comment.timestamp)}</span>
                 </div>
-                <div class="comment-content">${escapeHtml(comment.content)}</div>
+                <div class="comment-content">${linkify(comment.content)}</div>
             </div>
         `).join('') :
         '<p class="text-muted">No comments yet</p>';
@@ -835,6 +835,17 @@ function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+}
+
+function linkify(text) {
+    if (!text) return '';
+    // Escape HTML first, then convert URLs to clickable links and newlines to <br>
+    const escaped = escapeHtml(text);
+    const linked = escaped.replace(
+        /(https?:\/\/[^\s&lt;&gt;"]+)/g,
+        '<a href="$1" target="_blank" rel="noopener noreferrer" style="color:#58a6ff;text-decoration:underline;word-break:break-all;">$1</a>'
+    );
+    return linked.replace(/\n/g, '<br>');
 }
 
 function capitalizeFirst(str) {
