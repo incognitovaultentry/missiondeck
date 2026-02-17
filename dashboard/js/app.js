@@ -1863,10 +1863,8 @@ async function loadChatMessages() {
         } catch (e) { /* fallback */ }
     }
 
-    // Fallback: use sample data
-    if (messages.length === 0 && window.missionControlData.getChatMessages) {
-        messages = window.missionControlData.getChatMessages();
-    }
+    // No fallback to sample data — if API fails, show empty state
+
 
     messages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
     renderChatMessages(container, messages);
