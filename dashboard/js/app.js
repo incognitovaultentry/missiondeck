@@ -2312,6 +2312,291 @@ function renderTaskAttachments(task) {
 }
 
 // ============================================
+// TEAM CHANNEL (#general)
+// ============================================
+
+const TEAM_CHANNEL_API = 'https://audio-architecture-park-keywords.trycloudflare.com';
+const TEAM_CHANNEL_WS_URL = 'wss://audio-architecture-park-keywords.trycloudflare.com/ws';
+let teamChannelWs = null;
+let currentMainView = 'board';
+
+/**
+ * Switch between board and team channel views
+ */
+function switchMainView(view) {
+    currentMainView = view;
+
+    const boardEl = document.getElementById('kanban-board');
+    const channelEl = document.getElementById('team-channel-panel');
+
+    // Toggle tabs
+    document.querySelectorAll('.main-view-tab').forEach(tab => {
+        tab.classList.toggle('active', tab.dataset.view === view);
+    });
+
+    if (view === 'team') {
+        if (boardEl) boardEl.style.display = 'none';
+        if (channelEl) channelEl.style.display = 'flex';
+        loadTeamChannel();
+        setupTeamChannelWs();
+    } else {
+        if (boardEl) boardEl.style.display = '';
+        if (channelEl) channelEl.style.display = 'none';
+    }
+}
+
+/**
+ * Load team channel messages from API
+ */
+async function loadTeamChannel() {
+    const container = document.getElementById('channel-messages');
+    if (!container) return;
+
+    try {
+        const response = await fetch(`${TEAM_CHANNEL_API}/api/messages`);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const data = await response.json();
+
+        // Accept array or { messages: [...] }
+        const all = Array.isArray(data) ? data : (data.messages || []);
+
+        // Filter to #general channel
+        const msgs = all
+            .filter(m => m.to === 'general' || m.type === 'channel')
+            .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+
+        renderChannelMessages(container, msgs);
+    } catch (error) {
+        console.error('[TeamChannel] Failed to load messages:', error);
+        container.innerHTML = '<p class="channel-empty">Could not load messages. Server may be offline.</p>';
+    }
+}
+
+/**
+ * Parse @mentions in already-escaped HTML content
+ */
+function parseMentions(html) {
+    return html.replace(/@([\w-]+)/g, '<span class="mention">@$1</span>');
+}
+
+/**
+ * Get role color for an agent/human by role
+ */
+function getRoleColor(role, isHuman) {
+    if (isHuman) return '#f0883e';
+    if (role === 'lead') return '#58a6ff';
+    return '#3fb950'; // specialist / default
+}
+
+/**
+ * Render channel messages into a container
+ */
+function renderChannelMessages(container, messages) {
+    if (!messages || messages.length === 0) {
+        container.innerHTML = '<p class="channel-empty">No messages yet. Be the first to post!</p>';
+        return;
+    }
+
+    container.innerHTML = messages.map(msg => {
+        const senderId = msg.from || 'unknown';
+        const isHuman = senderId.startsWith('human-');
+
+        // Resolve agent/human from data store
+        const agent = isHuman
+            ? (window.missionControlData.getHumans
+                ? window.missionControlData.getHumans().find(h => h.id === senderId)
+                : null)
+            : window.missionControlData.getAgent(senderId);
+
+        const displayName = agent ? agent.name : senderId;
+        const role = agent ? agent.role : (isHuman ? 'human' : 'specialist');
+        const nameColor = getRoleColor(role, isHuman);
+
+        // Avatar: use agent avatar, or dicebear fallback
+        const avatarSeed = encodeURIComponent(senderId);
+        const avatarUrl = (agent && agent.avatar)
+            ? agent.avatar
+            : `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${avatarSeed}&backgroundColor=0ea5e9`;
+
+        const initials = getInitials(displayName);
+        const contentHtml = parseMentions(escapeHtml(msg.content || ''));
+
+        return `
+            <div class="channel-message">
+                <img
+                    src="${escapeHtml(avatarUrl)}"
+                    class="channel-avatar"
+                    alt="${escapeHtml(displayName)}"
+                    onerror="this.outerHTML='<div class=\\'channel-avatar channel-avatar-fallback\\'>${escapeHtml(initials)}</div>'"
+                >
+                <div class="channel-message-body">
+                    <div class="channel-message-header">
+                        <span class="channel-sender" style="color:${nameColor}">${escapeHtml(displayName)}</span>
+                        <span class="channel-time">${formatDate(msg.timestamp)}</span>
+                    </div>
+                    <div class="channel-message-content">${contentHtml}</div>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    // Auto-scroll to newest message
+    container.scrollTop = container.scrollHeight;
+}
+
+/**
+ * Append a single new channel message (for real-time updates)
+ */
+function appendChannelMessage(msg) {
+    const container = document.getElementById('channel-messages');
+    if (!container) return;
+
+    // Remove "no messages" placeholder if present
+    const empty = container.querySelector('.channel-empty');
+    if (empty) empty.remove();
+
+    const senderId = msg.from || 'unknown';
+    const isHuman = senderId.startsWith('human-');
+
+    const agent = isHuman
+        ? (window.missionControlData.getHumans
+            ? window.missionControlData.getHumans().find(h => h.id === senderId)
+            : null)
+        : window.missionControlData.getAgent(senderId);
+
+    const displayName = agent ? agent.name : senderId;
+    const role = agent ? agent.role : (isHuman ? 'human' : 'specialist');
+    const nameColor = getRoleColor(role, isHuman);
+    const avatarSeed = encodeURIComponent(senderId);
+    const avatarUrl = (agent && agent.avatar)
+        ? agent.avatar
+        : `https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${avatarSeed}&backgroundColor=0ea5e9`;
+    const initials = getInitials(displayName);
+    const contentHtml = parseMentions(escapeHtml(msg.content || ''));
+
+    const el = document.createElement('div');
+    el.className = 'channel-message';
+    el.innerHTML = `
+        <img
+            src="${escapeHtml(avatarUrl)}"
+            class="channel-avatar"
+            alt="${escapeHtml(displayName)}"
+            onerror="this.outerHTML='<div class=\\'channel-avatar channel-avatar-fallback\\'>${escapeHtml(initials)}</div>'"
+        >
+        <div class="channel-message-body">
+            <div class="channel-message-header">
+                <span class="channel-sender" style="color:${nameColor}">${escapeHtml(displayName)}</span>
+                <span class="channel-time">${formatDate(msg.timestamp)}</span>
+            </div>
+            <div class="channel-message-content">${contentHtml}</div>
+        </div>
+    `;
+    container.appendChild(el);
+    container.scrollTop = container.scrollHeight;
+}
+
+/**
+ * Setup WebSocket for real-time team channel updates
+ */
+function setupTeamChannelWs() {
+    // Don't reconnect if already open
+    if (teamChannelWs && teamChannelWs.readyState === WebSocket.OPEN) return;
+    if (teamChannelWs) {
+        teamChannelWs.onclose = null; // prevent reconnect loop on manual close
+        teamChannelWs.close();
+    }
+
+    try {
+        teamChannelWs = new WebSocket(TEAM_CHANNEL_WS_URL);
+
+        teamChannelWs.onopen = () => {
+            console.log('[TeamChannel] WebSocket connected');
+        };
+
+        teamChannelWs.onmessage = (event) => {
+            try {
+                const data = JSON.parse(event.data);
+                // Handle message.created event
+                const isCreated = data.type === 'message.created';
+                const msg = isCreated ? (data.data || data.message || data) : null;
+
+                if (isCreated && msg && (msg.to === 'general' || msg.type === 'channel')) {
+                    // Only update if team panel is active
+                    if (currentMainView === 'team') {
+                        appendChannelMessage(msg);
+                    }
+                }
+            } catch (e) {
+                console.error('[TeamChannel] WS parse error:', e);
+            }
+        };
+
+        teamChannelWs.onclose = () => {
+            console.log('[TeamChannel] WebSocket closed — reconnecting in 5s');
+            setTimeout(() => {
+                if (currentMainView === 'team') {
+                    setupTeamChannelWs();
+                }
+            }, 5000);
+        };
+
+        teamChannelWs.onerror = (e) => {
+            console.error('[TeamChannel] WebSocket error:', e);
+        };
+    } catch (e) {
+        console.error('[TeamChannel] Failed to connect WebSocket:', e);
+    }
+}
+
+/**
+ * Send a message to #general
+ */
+async function sendChannelMessage() {
+    const input = document.getElementById('channel-input');
+    if (!input) return;
+    const content = input.value.trim();
+    if (!content) return;
+
+    input.disabled = true;
+
+    try {
+        const response = await fetch(`${TEAM_CHANNEL_API}/api/messages`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                from: 'human-farhad',
+                to: 'general',
+                content: content,
+                type: 'channel'
+            })
+        });
+
+        if (response.ok) {
+            input.value = '';
+            // Optimistically append the message (WebSocket may echo it too)
+            const sent = await response.json().catch(() => null);
+            const msg = sent || {
+                id: `msg-${Date.now()}`,
+                from: 'human-farhad',
+                to: 'general',
+                content: content,
+                type: 'channel',
+                timestamp: new Date().toISOString()
+            };
+            appendChannelMessage(msg);
+        } else {
+            showToast('error', 'Send Failed', `Server returned ${response.status}`);
+        }
+    } catch (error) {
+        console.error('[TeamChannel] Send error:', error);
+        showToast('error', 'Send Failed', 'Could not reach the server');
+    } finally {
+        input.disabled = false;
+        input.focus();
+    }
+}
+
+// ============================================
 // REAL-TIME MESSAGE LISTENERS
 // ============================================
 

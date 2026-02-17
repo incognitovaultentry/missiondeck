@@ -5458,3 +5458,350 @@ body::after {
 [data-theme="light"] .quota-progress-bar {
     background: var(--bg-tertiary);
 }
+
+/* ============================================
+   TEAM CHANNEL - #general
+   ============================================ */
+
+/* Main view wrapper — contains tabs + board/channel panels */
+.main-view-wrapper {
+    display: contents; /* behaves like a transparent wrapper in grid/flex */
+}
+
+/* View Tabs (Tasks / Team) */
+.main-view-tabs {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 16px 0;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--bg-primary);
+    border-bottom: 1px solid var(--border-color);
+    /* Span full width of the center column */
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.main-view-tab {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-family: var(--font-body, 'Rajdhani', sans-serif);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 6px 6px 0 0;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+
+.main-view-tab:hover {
+    color: var(--text-primary);
+    background: var(--bg-secondary);
+}
+
+.main-view-tab.active {
+    color: var(--text-primary);
+    background: var(--bg-secondary);
+    border-color: var(--border-color);
+    border-bottom-color: var(--bg-secondary);
+}
+
+/* Team Channel Panel */
+.team-channel-panel {
+    flex-direction: column;
+    background: #0d1117;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+    min-height: 0;
+    height: calc(100vh - 130px);
+    grid-column: 2;
+    grid-row: 2;
+}
+
+/* If the tabs push a row, let the panel occupy the same column */
+.kanban-board {
+    grid-column: 2;
+}
+
+.channel-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border-color);
+    background: #161b22;
+    flex-shrink: 0;
+}
+
+.channel-hash {
+    font-size: 18px;
+    font-weight: 700;
+    color: #58a6ff;
+    line-height: 1;
+}
+
+.channel-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+    font-family: var(--font-mono, 'Share Tech Mono', monospace);
+}
+
+.channel-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-left: 4px;
+}
+
+/* Scrollable messages area */
+.channel-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    scroll-behavior: smooth;
+}
+
+.channel-empty {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 13px;
+    margin: auto;
+    padding: 32px 0;
+}
+
+/* Individual message row */
+.channel-message {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 6px 8px;
+    border-radius: 6px;
+    transition: background 0.15s;
+}
+
+.channel-message:hover {
+    background: rgba(255,255,255,0.04);
+}
+
+/* Avatar */
+.channel-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.channel-avatar-fallback {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #21262d;
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.channel-message-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.channel-message-header {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 2px;
+}
+
+.channel-sender {
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1;
+    /* color set inline based on role */
+}
+
+.channel-time {
+    color: #8b949e;
+    font-size: 11px;
+    flex-shrink: 0;
+}
+
+.channel-message-content {
+    font-size: 13px;
+    color: var(--text-primary);
+    line-height: 1.5;
+    word-break: break-word;
+}
+
+/* @mention styling */
+.mention {
+    color: #58a6ff;
+    font-weight: 600;
+    background: rgba(88, 166, 255, 0.1);
+    padding: 1px 4px;
+    border-radius: 3px;
+}
+
+/* Input area */
+.channel-input-area {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-top: 1px solid var(--border-color);
+    background: #161b22;
+    flex-shrink: 0;
+}
+
+.channel-input {
+    flex: 1;
+    padding: 8px 12px;
+    background: #21262d;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-size: 13px;
+    font-family: var(--font-body, 'Rajdhani', sans-serif);
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.channel-input:focus {
+    border-color: #58a6ff;
+    background: #1c2129;
+}
+
+.channel-input::placeholder {
+    color: #8b949e;
+}
+
+.channel-input:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.channel-send-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    background: #1f6feb;
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.2s;
+    flex-shrink: 0;
+}
+
+.channel-send-btn:hover {
+    background: #388bfd;
+}
+
+.channel-send-btn:active {
+    background: #1158c7;
+}
+
+/* Light theme adjustments */
+[data-theme="light"] .team-channel-panel {
+    background: #ffffff;
+    border-color: #d0d7de;
+}
+
+[data-theme="light"] .channel-header,
+[data-theme="light"] .channel-input-area {
+    background: #f6f8fa;
+    border-color: #d0d7de;
+}
+
+[data-theme="light"] .channel-message:hover {
+    background: rgba(0,0,0,0.04);
+}
+
+[data-theme="light"] .channel-input {
+    background: #ffffff;
+    border-color: #d0d7de;
+    color: #1f2328;
+}
+
+[data-theme="light"] .channel-input:focus {
+    border-color: #0969da;
+    background: #fff;
+}
+
+[data-theme="light"] .channel-avatar-fallback {
+    background: #eaeef2;
+    color: #57606a;
+}
+
+[data-theme="light"] .channel-message-content {
+    color: #1f2328;
+}
+
+[data-theme="light"] .main-view-tab.active {
+    background: #f6f8fa;
+}
+
+[data-theme="light"] .main-view-tabs {
+    background: #ffffff;
+    border-color: #d0d7de;
+}
+
+/* ============================================
+   MAIN VIEW WRAPPER - Layout fix for flex container
+   ============================================ */
+
+/* Override display:contents — use flex column instead */
+.main-view-wrapper {
+    display: flex !important;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+}
+
+/* Tabs at the top of the center column */
+.main-view-tabs {
+    grid-column: unset;
+    grid-row: unset;
+    flex-shrink: 0;
+}
+
+/* Kanban board fills remaining space */
+.kanban-board {
+    flex: 1;
+    min-height: 0;
+}
+
+/* Channel panel fills same space */
+.team-channel-panel {
+    grid-column: unset;
+    grid-row: unset;
+    flex: 1;
+    height: auto; /* let flex handle height */
+    min-height: 0;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+}
