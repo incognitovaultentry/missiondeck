@@ -672,7 +672,7 @@ function openTaskModal(task) {
     // Performance stats
     const perfContainer = document.getElementById('modal-performance');
     if (perfContainer) {
-        const perf = task.metadata && task.metadata.performance;
+        const perf = task.performance || (task.metadata && task.metadata.performance);
         if (perf) {
             const tokens = perf.tokens_total >= 1000
                 ? `${(perf.tokens_total / 1000).toFixed(1)}k`
