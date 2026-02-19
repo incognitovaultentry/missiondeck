@@ -1,0 +1,125 @@
+{
+  "timestamp": "2026-02-19T05:22:43.756750Z",
+  "date": "2026-02-19",
+  "task_audit": {
+    "timestamp": "2026-02-19T05:22:43.721659Z",
+    "total_tasks": 9,
+    "compliant": 5,
+    "issues_found": 4,
+    "compliance_rate": 55.6,
+    "results": [
+      {
+        "file": "task-20260216-generate-10-blog-post-ideas-fo.json",
+        "id": "task-20260216-generate-10-blog-post-ideas-fo",
+        "title": "Generate 10 Blog Post Ideas for Sitepins",
+        "status": "DONE",
+        "assignee": "agent-maya",
+        "issues": [
+          "DONE task missing deliverable link in comments"
+        ]
+      },
+      {
+        "file": "task-20260217-1771326094724.json",
+        "id": "task-20260217-1771326094724",
+        "title": "Blog post: How to Let Non-Technical Editors Manage Your Astro Site",
+        "status": "REVIEW",
+        "assignee": "kai",
+        "issues": [
+          "Missing required field: comments",
+          "Invalid assignee format: kai"
+        ]
+      },
+      {
+        "file": "task-20260217-1771327571460.json",
+        "id": "task-20260217-1771327571460",
+        "title": "Content Research & Publishing Pipeline \u2014 Sitepins Blog",
+        "status": "REVIEW",
+        "assignee": "tony",
+        "issues": [
+          "Missing required field: comments",
+          "Invalid assignee format: tony"
+        ]
+      },
+      {
+        "file": "task-20260217-alex-email-sequence.json",
+        "id": "task-20260217-alex-email-sequence",
+        "title": "Write 3-email LTD campaign sequence",
+        "status": "REVIEW",
+        "assignee": "agent-alex",
+        "issues": []
+      },
+      {
+        "file": "task-20260217-kai-seats-counter.json",
+        "id": "task-20260217-kai-seats-counter",
+        "title": "Add live seats remaining counter to pricing page",
+        "status": "REVIEW",
+        "assignee": "agent-kai",
+        "issues": []
+      },
+      {
+        "file": "task-20260217-maya-distribution-plan.json",
+        "id": "task-20260217-maya-distribution-plan",
+        "title": "Build 30-day distribution plan for LTD campaign",
+        "status": "REVIEW",
+        "assignee": "agent-maya",
+        "issues": []
+      },
+      {
+        "file": "task-20260218-1771399377965.json",
+        "id": "task-20260218-1771399377965",
+        "title": "review openclaw branch of sitepins website",
+        "status": "INBOX",
+        "assignee": null,
+        "issues": [
+          "Missing required field: comments"
+        ]
+      },
+      {
+        "file": "task-20260219-blog-content-6-posts.json",
+        "id": "task-20260219-blog-content-6-posts",
+        "title": "Write, optimize & publish 6 blog posts to sitepins-website (openclaw branch)",
+        "status": "REVIEW",
+        "assignee": "agent-kai",
+        "issues": []
+      },
+      {
+        "file": "task-20260219-subdomain-migration.json",
+        "id": "task-20260219-subdomain-migration",
+        "title": "Migrate updates.sitepins.com from Upvoty to sitepins-updates app",
+        "status": "DONE",
+        "assignee": "human-farhad",
+        "issues": []
+      }
+    ]
+  },
+  "deliverable_verification": {
+    "timestamp": "2026-02-19T05:22:43.751212Z",
+    "total_done_tasks": 2,
+    "all_valid": 1,
+    "broken_links": 0,
+    "missing_links": 1,
+    "results": [
+      {
+        "task_id": "task-20260216-generate-10-blog-post-ideas-fo",
+        "title": "Generate 10 Blog Post Ideas for Sitepins",
+        "assignee": "agent-maya",
+        "links": [],
+        "issue": "No deliverable links found"
+      },
+      {
+        "task_id": "task-20260219-subdomain-migration",
+        "title": "Migrate updates.sitepins.com from Upvoty to sitepins-updates app",
+        "assignee": "human-farhad",
+        "links": [
+          {
+            "url": "https://github.com/incognitovaultentry/missiondeck/blob/main/dashboard/deliverables/tony/subdomain-migration-updates-sitepins.md",
+            "exists": true,
+            "path": "/tmp/missiondeck/dashboard/deliverables/tony/subdomain-migration-updates-sitepins.md",
+            "reason": "File found"
+          }
+        ],
+        "all_valid": true
+      }
+    ]
+  }
+}
