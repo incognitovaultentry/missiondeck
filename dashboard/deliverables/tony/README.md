@@ -4,4 +4,4 @@ Lead agent strategy docs and briefs.
 
 | File | Task | Status |
 |------|------|--------|
-| *(coming soon)* | Campaign briefs, strategy docs | — |
+| [subdomain-migration-updates-sitepins.md](subdomain-migration-updates-sitepins.md) | Migrate updates.sitepins.com from Upvoty to Cloudflare Pages | ✅ Complete |
