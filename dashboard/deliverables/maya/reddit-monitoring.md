@@ -1,9 +1,42 @@
 # Reddit & Dev Forum Monitoring - CMS Opportunities
 
-**Last Updated:** 2026-02-19 06:30 UTC  
-**Status:** ✅ LIVE — Real posts sourced via Reddit JSON API  
+**Last Updated:** 2026-02-21 07:00 UTC  
+**Status:** ⚠️ BLOCKED — Missing Brave Search API Key  
 **Method:** web_fetch → Reddit `.json` endpoints + search pages (Brave API unavailable)  
 **Keywords Monitored:** git-based cms, headless cms, cms for astro, markdown cms, github cms, file-based cms, forestry.io alternative, tina cms alternative, decap cms alternative, cms for non-technical editors, easy cms for developers, cms for next.js, cms for hugo
+
+---
+
+## 🚫 2026-02-21 — Task Blocked
+
+**Automated monitoring could not run** — `web_search` tool requires a Brave Search API key that is not configured on the server.
+
+**Action Required:**
+```bash
+openclaw configure --section web
+# Or set BRAVE_API_KEY in Gateway environment
+```
+
+**Manual Fallback URLs for Today's Check:**
+- [Git-based CMS (past week)](https://www.reddit.com/search/?q=git-based%20cms%20headless%20cms&t=week&sort=new)
+- [CMS for Astro (past week)](https://www.reddit.com/search/?q=cms%20for%20astro&t=week&sort=new)
+- [Forestry.io alternative (past week)](https://www.reddit.com/search/?q=forestry.io%20alternative&t=week&sort=new)
+- [Markdown CMS (past week)](https://www.reddit.com/search/?q=markdown%20cms&t=week&sort=new)
+- [CMS for Next.js/Hugo (past week)](https://www.reddit.com/search/?q=cms%20for%20next.js%20hugo&t=week&sort=new)
+
+**Alternative:** Use browser automation via `browser` tool (slower, but works without API key).
+
+**Result:** No new posts analyzed today. Manual review recommended.
+
+---
+
+## 📊 Summary (Last Successful Run: 2026-02-19)
+
+- **Posts Found:** 4 real, verified posts
+- **Highly Relevant:** 4
+- **Comments Drafted:** 4
+- **Engagement Priority:** HIGH — 3 posts directly name pain points Sitepins solves
+- **Date Range:** Feb 5–16, 2026 (all within last 14 days, 1 within last 4 days)
 
 ---
 
